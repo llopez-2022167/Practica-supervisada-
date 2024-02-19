@@ -6,8 +6,10 @@ import morgan from 'morgan'
 import helmet from 'helmet'
 import cors from 'cors'
 import { config } from 'dotenv' 
-import profesorRoutes from '../src/Profesor/profesor.routes.js'
-import alumnoRoutes from '../src/Alumno/alumno.routes.js'
+import profesorRoutes from '../src/routes/profesor.routes.js'
+import alumnoRoutes from '../src/routes/alumno.routes.js'
+import userRoutes from '../src/routes/user.routes.js'
+import { initServer } from '../config/app.js'
 
 //Configuraciones
 const app = express()

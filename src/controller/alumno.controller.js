@@ -1,13 +1,18 @@
 'user strict'//Modo estrcito
 
-import Alumno from './alumno.model.js'
+import Alumno from '../models/alumno.model.js'
 import { excrypt, checkPassword, checkUpdate } from '../utils/validator.js'
+
+
 const bcrypt = requ('bcrypt');
 const jwt = require('jsonwebtoken');
-const Usuario = require('../Usuario/user.controller.js')
+const Usuario = require('../controller/user.controller.js');
+const Curso = require('../Curso/curso.js');
 
+const { response } = require('express');
 
-exports.register = async (req, res) =>{
+//Resgistrase o un tipo get
+const crearAlumno = async (req, res) =>{
     try{
         //Validar si el usuario ya existe
         const existeUsuario = await Usuario.findOne({email: req.body.email})
@@ -30,11 +35,12 @@ exports.register = async (req, res) =>{
     }catch(err){
         console.error(err)
         res.status(500).json({message: 'Error al resgistrar usuario'})
-    };
-}
+    }
+};
 
+//Verificación de usuario para cuando quiera volver a entrar
 //Asincronia
-exports.login = async(req, res) =>{
+const login = async(req, res) =>{
     try{
         //Buscar usurairo por email
         const usuario = await Usuario.findOne({email: req.body.email});
@@ -55,4 +61,40 @@ exports.login = async(req, res) =>{
         console.error(err)
         res.status(500).json({message:'Error al iniciar seción'});
     }
+};
+
+const obteberAlumnoPorId = async (req, res)=>{
+    try{
+        const alumno = await Alumno.findById(req.parmas.id);
+        if(!alumno){
+            return res.status(404).json({message: 'Alumno no encontrado'});
+        }
+        res.json(alumno);
+    }catch(error){
+        register.status(500).json({message: 'Ocurrio un error al obtener el alumno'});
+
+    }
+};
+
+const actualizarAlumno = async (req, res) =>{
+    try{
+        await Alumno.findByIdAndUpdate(req.parmas.id, req.body);
+        res.json({message: 'Alumno actualizado correctamente'});
+    }catch(err){
+        console.error(err)
+        res.status(500).json({medssage: 'ocurrio un error al actualizar el alumno'});
+    }
+
+};
+
+//Eliminar el alumno por el ID
+const eliminarAlumno = async(req, res)=>{
+    try{
+        await Alumno.findByIdAndDelete(req.parmas.id);
+        res.json({message: 'Alumno eliminado correctamente'});
+    }catch(err){
+        console.error(err)
+        res.status(500).json({message: 'Ocurrió un error al eliminar el usuario'});
+    }
+
 };
